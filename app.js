@@ -1,7 +1,8 @@
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import router from "./routes/router";
+import router from "./routes/router.js";
+import userRouter from "./routes/userRouter.js";
 
 
 const app = express();
@@ -15,8 +16,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-
 app.use("/", router);
+app.use("/user", userRouter);
 
 
 const PORT = process.env.PORT || 3000;
