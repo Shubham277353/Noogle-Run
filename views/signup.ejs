@@ -5,19 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up</title>
   </head>
+
   <body>
     <form action="/users/sign-up" method="post">
       <label for="user-name">Username: </label>
-      <input type="text" name="username" id="user-name" value="<%= data.username || '' %>"/>
-      <% if(typeof errors !== 'undefined' && errors.)
+      <input
+        type="text"
+        name="username"
+        id="user-name"
+        value="<%= data.username || '' %>"
+      />
+    <% if(typeof errors !=='undefined' && errors.username){ %>
+            <span class="mt-2 block text-sm text-red-600">
+                <%= errors.username.msg %>
+            </span>
+    <% } %>
+
       <label for="email">Email: </label>
-      <input type="email" id="email" name="email" value="<%= data.email || '' %>" />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        value="<%= data.email || '' %>"
+      />
+    <% if(typeof errors !=='undefined' && errors.email){ %>
+            <span class="mt-2 block text-sm text-red-600">
+                <%= errors.email.msg %>
+            </span>
+    <% } %>
 
       <label for="password">password: </label>
       <input type="password" id="password" name="password" />
+    <% if(typeof errors !=='undefined' && errors.password){ %>
+            <span class="mt-2 block text-sm text-red-600">
+                <%= errors.password.msg %>
+            </span>
+    <% } %>
 
       <label for="confirm-password">Confirm Password: </label>
       <input type="password" id="confirm-password" name="confirmPassword" />
+    <% if(typeof errors !=='undefined' && errors.confirmPassword){ %>
+            <span class="mt-2 block text-sm text-red-600">
+                <%= errors.confirmPassword.msg %>
+            </span>
+    <% } %>
       <button type="submit">Submit</button>
     </form>
   </body>

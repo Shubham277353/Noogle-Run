@@ -4,8 +4,8 @@ import { validateSignUpForm } from "../middlewares/signUpValidaton.js";
 
 const userRouter = Router();
 
-userRouter.post("/sign-up",validateSignUpForm, postSignupForm);
 userRouter.get("/sign-up", getSignUpForm);
+userRouter.post("/sign-up",validateSignUpForm, postSignupForm);
 
 userRouter.get("/login", getLoginForm);
 

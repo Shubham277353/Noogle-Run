@@ -1,18 +1,28 @@
 import { body } from "express-validator";
 import { prisma } from "../lib/prisma.js";
 
+console.log("hii from validator");
+
 const validateSignUpForm = [
     body('username')
     .trim()
     .notEmpty().withMessage("Username can't be empty")
-    .isLength({min: 5}).withMessage("Username must be atleast 5 character long"),
+    .isLength({min: 5}).withMessage("Username must be atleast 5 character long")
+        .custom(async(value) => {
+        const user = await prisma.user.findUnique({
+                where: { username: value},
+            });
+        if(user){
+            throw new Error("username already exists");
+        }
+    }),
 
     body('email')
     .trim()
     .notEmpty().withMessage("email can't be empty")
     .isEmail().withMessage("enter a valid email")
     .custom(async(value) => {
-        const user = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
                 where: { email: value},
             });
         if(user){

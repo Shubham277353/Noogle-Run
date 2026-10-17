@@ -14,7 +14,7 @@ async function postSignupForm(req, res) {
   console.log("hii");
 
   const errors = validationResult(req);
-  if (!errors.isEmpty) {
+  if (!errors.isEmpty()) {
     return res.render("signup", { errors: errors.mapped(), data: req.body });
   }
 
