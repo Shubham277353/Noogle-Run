@@ -5,6 +5,7 @@ import router from "./routes/router.js";
 import userRouter from "./routes/userRouter.js";
 
 
+
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use("/", router);
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 
 
 const PORT = process.env.PORT || 3000;

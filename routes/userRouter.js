@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { getSignUpForm, postSignupForm } from "../controllers/userController.js";
-import { prisma } from './lib/prisma.js';
+import { getLoginForm, getSignUpForm, postSignupForm } from "../controllers/userController.js";
 import { validateSignUpForm } from "../middlewares/signUpValidaton.js";
 
 const userRouter = Router();
 
-userRouter.get("/sign-up", getSignUpForm);
 userRouter.post("/sign-up",validateSignUpForm, postSignupForm);
+userRouter.get("/sign-up", getSignUpForm);
+
+userRouter.get("/login", getLoginForm);
 
 export default userRouter;
