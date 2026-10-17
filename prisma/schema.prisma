@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
+  hashedPassword String 
+  folder Folder[]
+}
+
+model Folder {
+  id Int @id @default(autoincrement())
+  name String
+  creator User @relation(fields: [userId], references: [id])
+  userId Int
+  file File[]
+}
+
+model File {
+  id Int @id @default(autoincrement())
+  fileName String
+  size  Int
+  url String
+  uploadedAt DateTime @default(now())
+  folderId Int
+  folder Folder @relation(fields: [folderId], references: [id])
+}
