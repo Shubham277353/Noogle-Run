@@ -3,8 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import router from "./routes/router.js";
 import userRouter from "./routes/userRouter.js";
-
-
+import session from "express-session";
 
 const app = express();
 

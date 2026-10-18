@@ -8,5 +8,6 @@ userRouter.get("/sign-up", getSignUpForm);
 userRouter.post("/sign-up",validateSignUpForm, postSignupForm);
 
 userRouter.get("/login", getLoginForm);
+userRouter.post("/login")
 
 export default userRouter;
