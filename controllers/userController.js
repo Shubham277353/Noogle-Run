@@ -3,11 +3,13 @@ import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
 
 function getSignUpForm(req, res) {
-  res.render("signup", {data: {}});
+  const isAuthenticated = req.isAuthenticated();
+  res.render("signup", {data: {},  authenticatedUser: isAuthenticated});
 }
 
 function getLoginForm(req, res) {
-  res.render("login");
+  const isAuthenticated = req.isAuthenticated();
+  res.render("login", {authenticatedUser: isAuthenticated});
 }
 
 async function postSignupForm(req, res) {

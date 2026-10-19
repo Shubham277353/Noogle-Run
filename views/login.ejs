@@ -6,6 +6,7 @@
     <title>Login</title>
 </head>
 <body>
+    <%- include('./partials/navbar') %>
     <form action="/users/login" method="post">
         <label for="user-name">Username: </label>
         <input type="text" id="user-name" name="username">

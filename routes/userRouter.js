@@ -18,7 +18,7 @@ userRouter.post(
   validateForm,
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/error",
+    failureRedirect: "/users/login",
     failureMessage: true,
   }),
 );
