@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js";
 
 console.log("hii from validator");
 
-const validateSignUpForm = [
+const validateForm = [
     body('username')
     .trim()
     .notEmpty().withMessage("Username can't be empty")
@@ -44,4 +44,4 @@ const validateSignUpForm = [
     }),
 ];
 
-export {validateSignUpForm};
+export {validateForm};
