@@ -4,6 +4,8 @@
     <a href="/users/login">Login</a>
     <a href="/users/sign-up">Sign up</a>
     <% } else {%>
-        <a href="/users/logout">Logout</a>
+        <form action="/users/logout" method="post">
+            <Button>Logout</Button>
+        </form>
     <%}%>
 </body>
