@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Uploader</title>
 </head>
+
 <body>
     <%- include('./partials/navbar') %>
-    <h1>Welcome to Noogle_Run</h1>
+    <%- include('./partials/sidebar') %>
+        <h1>Welcome to Noogle_Run, <%= user.username %>!</h1>
+        <form action="/upload/file" method="post" enctype="multipart/form-data">
+            <input type="file" name="userFile" />
+        </form>
 </body>
-</html>
+
+</html> 

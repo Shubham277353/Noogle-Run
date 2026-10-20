@@ -1,0 +1,24 @@
+<body>
+    <div>
+
+        <button onclick="openModal('foldarModal')">+</button>
+
+        <dialog id="foldarModal">
+            <form action="/folder/new" method="post">
+                <h1>Create Folder</h1>
+                <input type="text" name="folderName" required>
+                <button type="submit">Create</button>
+                <button type="button" onclick="closeModal('foldarModal')">Cancel</button>
+            </form>
+        </dialog>
+    </div>
+
+    <script>
+        function openModal(id){
+            document.getElementById(id).showModal();
+        }
+        function closeModal(id){
+            document.getElementById(id).close();
+        }
+    </script>
+</body>
