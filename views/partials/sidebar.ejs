@@ -13,6 +13,14 @@
         </dialog>
     </div>
 
+    <hr>
+
+    <div id="folders-container">
+        <% folders.forEach((folderr) => { %>
+            <a href="/folder/<%= folderr.id %>"> <%= folderr.name %> </a>
+        <% }) %>
+    </div>
+
     <script>
         function openModal(id){
             document.getElementById(id).showModal();
