@@ -17,7 +17,7 @@ userRouter.post(
   "/login",
   validateForm,
   passport.authenticate("local", {
-    successRedirect: "/home",
+    successRedirect: "/",
     failureRedirect: "/users/login",
     failureMessage: true,
   }),
