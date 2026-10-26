@@ -27,7 +27,32 @@ async function getFolder(req, res) {
     where: { id: Number(id) }
   });
 
-  res.render("folder", {folderName: folder.name, authenticatedUser: authCheck });
+  res.render("folder", {folder: folder, authenticatedUser: authCheck });
 }
 
-export { postFolder, getFolder };
+async function  postFile(req, res) {
+  const fileName = req.file.originalname;
+  const size = req.file.size;
+  const url = req.file.path;
+  const folderId = Number(req.params.id);
+
+  try{
+    const file = await prisma.file.create({
+      data: {
+        fileName: fileName,
+        size: size,
+        url: url,
+        folderId: folderId,
+      }
+    })
+    console.log(file);
+    res.redirect(`/folder/${folderId}`);
+  }catch(err){
+    console.error(err);
+    res.status(500).json({
+      errors: [{ msg: "Internal Server Error" }],
+    });
+  }
+}
+
+export { postFolder, getFolder, postFile };
