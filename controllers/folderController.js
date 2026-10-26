@@ -1,3 +1,4 @@
+import path from "node:path";
 import { prisma } from "../lib/prisma.js";
 
 async function postFolder(req, res) {
@@ -27,7 +28,17 @@ async function getFolder(req, res) {
     where: { id: Number(id) }
   });
 
-  res.render("folder", {folder: folder, authenticatedUser: authCheck });
+  const files = await prisma.file.findMany({
+    where: {folderId: Number(id)},
+  });
+
+  const filesWithExtension = files.map((file) => ({
+    ...file,
+    extension: path.extname(file.fileName).toLocaleLowerCase()
+  }));
+
+  console.log("hii from the conrtoller", filesWithExtension);
+  res.render("folder", { files: filesWithExtension, folder: folder, authenticatedUser: authCheck });
 }
 
 async function  postFile(req, res) {

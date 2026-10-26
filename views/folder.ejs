@@ -9,6 +9,18 @@
     <%- include('./partials/navbar') %>
     <%- include('./partials/sidebar') %>
     <h1><%= folder.name %></h1>
+
+    <% files.forEach((file) => { %>
+        <div style="border: 1px solid black; width: 90px; padding: 10px; margin-bottom: 10px;">
+            <% if(file.extension === '.pdf'){ %>
+                <img src="/images/folder-1484_64.png" alt="folder icon" style="width: 64px; height: 64px;">
+            <%}else if (file.extension === '.png' || file.extension === ".jpg") {%>
+                <img src="/images/image_1296698.png" alt="image icon" style="width: 64px; height: 64px;">
+            <%}%>
+            <p><%= file.fileName %></p>
+        </div>
+    <%})%>
+
     <form action="/folder/<%= folder.id %>/upload" method="post" enctype="multipart/form-data">
             <input type="file" name="userFile" />
             <button type="submit">Upload</button>
