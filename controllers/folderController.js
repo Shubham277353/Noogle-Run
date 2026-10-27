@@ -1,5 +1,8 @@
 import path from "node:path";
 import { prisma } from "../lib/prisma.js";
+import { promises as fs } from 'fs';
+import { fileTypeFromBuffer } from "file-type";
+
 
 async function postFolder(req, res) {
   const name = req.body.folderName;
@@ -12,7 +15,7 @@ async function postFolder(req, res) {
       },
     });
     console.log(folder);
-    res.redirect("/");
+    res.redirect(`/folder/${folder.id}`);
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -42,12 +45,20 @@ async function getFolder(req, res) {
 }
 
 async function  postFile(req, res) {
-  const fileName = req.file.originalname;
-  const size = req.file.size;
-  const url = req.file.path;
-  const folderId = Number(req.params.id);
-
+  
   try{
+    
+    const uploadDir = path.join(process.cwd(), 'uploads');
+    const uniqueFileName = `${Date.now()}-${req.file.originalname}`;
+    const fullPath = path.join(uploadDir, uniqueFileName);
+    
+    await fs.writeFile(fullPath, req.file.buffer);
+    
+    const fileName = req.file.originalname;
+    const size = req.file.size;
+    const url = fullPath;
+    const folderId = Number(req.params.id);
+
     const file = await prisma.file.create({
       data: {
         fileName: fileName,
@@ -63,6 +74,10 @@ async function  postFile(req, res) {
     res.status(500).json({
       errors: [{ msg: "Internal Server Error" }],
     });
+  } finally{
+    if(req.file){
+      req.file.buffer = null;
+    }
   }
 }
 
