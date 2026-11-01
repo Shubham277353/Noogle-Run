@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= file.fileName %></title>
+</head>
+<body>
+
+    <%- include('./partials/navbar') %>
+    <%- include('./partials/sidebar') %>
+
+    <div style="width: 90px; padding: 10px; margin-bottom: 10px;">
+            <% if(extension === '.pdf' || extension === ".zip"){ %>
+                <img src="/images/folder-1484_64.png" alt="folder icon" style="width: 64px; height: 64px;">
+            <%}else if (extension === '.png' || extension === ".jpg" || extension === ".jpeg") {%>
+                <img src="/images/image_1296698.png" alt="image icon" style="width: 64px; height: 64px;">
+            <%}%>
+    </div>
+    <h2><%= file.fileName %></h2>
+    <p>Size: <%= fileSize %></p>
+    <p>Upload date: <%= date %></p>
+    <p>Type: <%= extension %></p>
+    
+</body>
+</html>

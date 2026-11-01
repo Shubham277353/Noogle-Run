@@ -81,4 +81,19 @@ async function  postFile(req, res) {
   }
 }
 
-export { postFolder, getFolder, postFile };
+async function showFile(req, res){
+  const authCheck = req.isAuthenticated();
+  const fileId = Number(req.params.fileId);
+  const file = await prisma.file.findUnique({
+    where: {id: fileId},
+  })
+  const extension = path.extname(file.fileName).toLocaleLowerCase();
+  const fileSizeInMb = Math.floor(((file.size / 1000000) * 100)) / 100 ;
+  const uploadedAt = file.uploadedAt;
+  const date = uploadedAt.toDateString();
+  console.log("date: ", date);
+
+  res.render("file", {file: file, fileSize: fileSizeInMb, date: date, extension: extension, authenticatedUser: authCheck});
+}
+
+export { postFolder, getFolder, postFile, showFile };
