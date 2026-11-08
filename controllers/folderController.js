@@ -107,7 +107,11 @@ function downloadFile(req, res) {
     if(!file){
       return res.status(404).send("File not found");
     }
-    res.download(file.url, file.fileName);
+    res.download(file.url, file.fileName, (err)=>{
+      if (err.code === 'ENOENT') {
+          return res.status(404).send("File no longer exists on the server.");
+        }
+    });
   }).catch((err) => {
     console.error(err);
     res.status(500).json({
