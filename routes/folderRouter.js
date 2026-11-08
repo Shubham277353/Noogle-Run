@@ -11,5 +11,6 @@ folderRouter.post("/new", authCheck, postFolder);
 folderRouter.get("/:id", authCheck, folderAccessCheck, fetchFolders, getFolder);
 folderRouter.post("/:id/upload", authCheck, folderAccessCheck,upload1.single("userFile"), fileTypeCheck, postFile);
 folderRouter.get("/:id/:fileId",authCheck, folderAccessCheck, fetchFolders, showFile);
+folderRouter.get("/:id/:fileId/download",authCheck, folderAccessCheck, fetchFolders, showFile)
 
 export {folderRouter};
