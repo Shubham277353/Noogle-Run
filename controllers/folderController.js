@@ -97,4 +97,23 @@ async function showFile(req, res){
   res.render("file", {file: file, folderId: folderId, fileSize: fileSizeInMb, date: date, extension: extension, authenticatedUser: authCheck});
 }
 
-export { postFolder, getFolder, postFile, showFile };
+function downloadFile(req, res) {
+  const fileId = Number(req.params.fileId);
+  prisma.file.findUnique({
+    where: {
+      id: fileId,
+    }
+  }).then((file) => {
+    if(!file){
+      return res.status(404).send("File not found");
+    }
+    res.download(file.url, file.fileName);
+  }).catch((err) => {
+    console.error(err);
+    res.status(500).json({
+      errors: [{ msg: "Internal Server Error" }],
+    });
+  })
+}
+
+export { postFolder, getFolder, postFile, showFile, downloadFile };
