@@ -5,12 +5,13 @@ import fetchFolders from "../middlewares/fetchFolders.js";
 import authCheck from "../middlewares/authCheck.js";
 import upload1 from "../middlewares/memorySave.js";
 import fileTypeCheck from "../middlewares/filetTypeCheck.js";
+import fileAccessCheck from "../middlewares/fileAccessCheck.js";
 const folderRouter = Router();
 
 folderRouter.post("/new", authCheck, postFolder);
 folderRouter.get("/:id", authCheck, folderAccessCheck, fetchFolders, getFolder);
 folderRouter.post("/:id/upload", authCheck, folderAccessCheck,upload1.single("userFile"), fileTypeCheck, postFile);
-folderRouter.get("/:id/:fileId",authCheck, folderAccessCheck, fetchFolders, showFile);
-folderRouter.get("/:id/:fileId/download",authCheck, folderAccessCheck, fetchFolders, showFile)
+folderRouter.get("/:id/:fileId",authCheck, fileAccessCheck, fetchFolders, showFile);
+folderRouter.get("/:id/:fileId/download",authCheck, fileAccessCheck, fetchFolders, showFile)
 
 export {folderRouter};
