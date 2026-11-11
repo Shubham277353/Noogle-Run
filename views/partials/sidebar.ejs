@@ -16,8 +16,11 @@
     <hr>
 
     <div id="folders-container">
-        <% folders.forEach((folderr) => { %>
-            <a href="/folder/<%= folderr.id %>"> <%= folderr.name %> </a>
+        <% folders.forEach((folder) => { %>
+            <a href="/folder/<%= folder.id %>"> <%= folder.name %> </a>
+            <a href="/folder/<%= folder.id %>/delete">Delete</a>
+            <a id="" href="/folder/<%= folder.id %>/rename">Rename</a>
+            <input type="text" name="folderName" id="folderName" value="folder.name">
         <% }) %>
     </div>
 

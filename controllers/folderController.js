@@ -1,8 +1,7 @@
 import path from "node:path";
 import { prisma } from "../lib/prisma.js";
-import { promises as fs } from 'fs';
+import { promises as fs } from "fs";
 import { fileTypeFromBuffer } from "file-type";
-
 
 async function postFolder(req, res) {
   const name = req.body.folderName;
@@ -28,32 +27,34 @@ async function getFolder(req, res) {
   const authCheck = req.isAuthenticated();
   const id = req.params.id;
   const folder = await prisma.folder.findFirst({
-    where: { id: Number(id) }
+    where: { id: Number(id) },
   });
 
   const files = await prisma.file.findMany({
-    where: {folderId: Number(id)},
+    where: { folderId: Number(id) },
   });
 
   const filesWithExtension = files.map((file) => ({
     ...file,
-    extension: path.extname(file.fileName).toLocaleLowerCase()
+    extension: path.extname(file.fileName).toLocaleLowerCase(),
   }));
 
   console.log("hii from the conrtoller", filesWithExtension);
-  res.render("folder", { files: filesWithExtension, folder: folder, authenticatedUser: authCheck });
+  res.render("folder", {
+    files: filesWithExtension,
+    folder: folder,
+    authenticatedUser: authCheck,
+  });
 }
 
-async function  postFile(req, res) {
-  
-  try{
-    
-    const uploadDir = path.join(process.cwd(), 'uploads');
+async function postFile(req, res) {
+  try {
+    const uploadDir = path.join(process.cwd(), "uploads");
     const uniqueFileName = `${Date.now()}-${req.file.originalname}`;
     const fullPath = path.join(uploadDir, uniqueFileName);
-    
+
     await fs.writeFile(fullPath, req.file.buffer);
-    
+
     const fileName = req.file.originalname;
     const size = req.file.size;
     const url = fullPath;
@@ -65,59 +66,109 @@ async function  postFile(req, res) {
         size: size,
         url: url,
         folderId: folderId,
-      }
-    })
+      },
+    });
     console.log(file);
     res.redirect(`/folder/${folderId}`);
-  }catch(err){
+  } catch (err) {
     console.error(err);
     res.status(500).json({
       errors: [{ msg: "Internal Server Error" }],
     });
-  } finally{
-    if(req.file){
+  } finally {
+    if (req.file) {
       req.file.buffer = null;
     }
   }
 }
 
-async function showFile(req, res){
+async function showFile(req, res) {
   const authCheck = req.isAuthenticated();
   const fileId = Number(req.params.fileId);
   const folderId = Number(req.params.id);
   const file = await prisma.file.findUnique({
-    where: {id: fileId},
-  })
+    where: { id: fileId },
+  });
   const extension = path.extname(file.fileName).toLocaleLowerCase();
-  const fileSizeInMb = Math.floor(((file.size / 1000000) * 100)) / 100 ;
+  const fileSizeInMb = Math.floor((file.size / 1000000) * 100) / 100;
   const uploadedAt = file.uploadedAt;
   const date = uploadedAt.toDateString();
   console.log("fileL:", file);
 
-  res.render("file", {file: file, folderId: folderId, fileSize: fileSizeInMb, date: date, extension: extension, authenticatedUser: authCheck});
+  res.render("file", {
+    file: file,
+    folderId: folderId,
+    fileSize: fileSizeInMb,
+    date: date,
+    extension: extension,
+    authenticatedUser: authCheck,
+  });
 }
 
 function downloadFile(req, res) {
   const fileId = Number(req.params.fileId);
-  prisma.file.findUnique({
-    where: {
-      id: fileId,
-    }
-  }).then((file) => {
-    if(!file){
+  prisma.file
+    .findUnique({
+      where: {
+        id: fileId,
+      },
+    })
+    .then((file) => {
+      if (!file) {
+        return res.status(404).send("File not found");
+      }
+      res.download(file.path, file.fileName, (err) => {
+        if (err) {
+          if (err.code === "ENOENT" && !res.headersSent) {
+            return res.status(404).send("File no longer exists on the server.");
+          }
+          if (!res.headersSent) {
+            return res.status(500).send("Could not download the file.");
+          }
+        }
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({
+        errors: [{ msg: "Internal Server Error" }],
+      });
+    });
+}
+
+async function deleteFile(req, res) {
+  const fileId = Number(req.params.fileId);
+  const folderId = Number(req.params.id);
+  try {
+    const file = await prisma.file.findUnique({
+      where: { id: fileId },
+    });
+
+    if (!file) {
       return res.status(404).send("File not found");
     }
-    res.download(file.url, file.fileName, (err)=>{
-      if (err.code === 'ENOENT') {
-          return res.status(404).send("File no longer exists on the server.");
-        }
+
+    try {
+      await fs.unlink(file.url);
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+
+    await prisma.file.delete({
+      where: { id: fileId },
     });
-  }).catch((err) => {
+
+    res.redirect(`/folder/${folderId}`);
+  } catch (err) {
     console.error(err);
     res.status(500).json({
       errors: [{ msg: "Internal Server Error" }],
     });
-  })
+  }
 }
 
-export { postFolder, getFolder, postFile, showFile, downloadFile };
+async function renameFolder(req, res){
+  const folderId = Number(req.params.id);
+}
+
+export { postFolder, getFolder, postFile, showFile, downloadFile, deleteFile, renameFolder };
