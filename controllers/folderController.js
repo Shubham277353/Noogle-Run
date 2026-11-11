@@ -167,8 +167,29 @@ async function deleteFile(req, res) {
   }
 }
 
-async function renameFolder(req, res){
+async function renameFolder(req, res) {
   const folderId = Number(req.params.id);
+  const folderName = req.body.folderName;
+  try {
+    const updatedFolder = await prisma.folder.update({
+      where: { id: folderId },
+      data: { name: folderName },
+    });
+    res.redirect(`/folder/${updatedFolder.id}`);
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({
+      errors: [{ msg: "Internal Server Error" }],
+    });
+  }
 }
 
-export { postFolder, getFolder, postFile, showFile, downloadFile, deleteFile, renameFolder };
+export {
+  postFolder,
+  getFolder,
+  postFile,
+  showFile,
+  downloadFile,
+  deleteFile,
+  renameFolder,
+};

@@ -17,10 +17,14 @@
 
     <div id="folders-container">
         <% folders.forEach((folder) => { %>
-            <a href="/folder/<%= folder.id %>"> <%= folder.name %> </a>
-            <a href="/folder/<%= folder.id %>/delete">Delete</a>
-            <a id="" href="/folder/<%= folder.id %>/rename">Rename</a>
-            <input type="text" name="folderName" id="folderName" value="folder.name">
+            <form id="renameForm" style="display: none;" action="/folder/<%= folder.id %>/rename" method="post">
+                <input type="text" name="folderName" value="<%= folder.name %>">
+                <button type="submit">Submit</button>
+                <button id="cancelBtn" type="button">Cancel</button>
+            </form>
+            <a id="folderName" href="/folder/<%= folder.id %>"> <%= folder.name %> </a>
+            <a id="deleteBtn" href="/folder/<%= folder.id %>/delete">Delete</a>
+            <button id="renameBtn">Rename</button>
         <% }) %>
     </div>
 
@@ -31,5 +35,24 @@
         function closeModal(id){
             document.getElementById(id).close();
         }
+
+        const renameBtn = document.getElementById("renameBtn");
+        const deleteBtn = document.getElementById("deleteBtn");
+        const form = document.getElementById("renameForm");
+        const folderName = document.getElementById("folderName");
+        const cancelBtn = document.getElementById("cancelBtn");
+        renameBtn.addEventListener("click", () => {
+            form.style.display = "";
+            folderName.style.display = "none";
+            deleteBtn.style.display = "none";
+            cancelBtn.style.display = "";
+            renameBtn.style.display = "none";
+        });
+        cancelBtn.addEventListener("click", () => {
+            form.style.display = "none";
+            folderName.style.display = "";
+            deleteBtn.style.display = "";
+            cancelBtn.style.display = "none";
+        });
     </script>
 </body>
